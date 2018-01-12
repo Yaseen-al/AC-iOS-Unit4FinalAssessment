@@ -36,6 +36,8 @@ class SettingsViewController: UIViewController {
     let horizontalOffset = 20
     let verticalOffset = 10
     
+    var settings: Setting?
+    
     var properties: [[AnimationProperty]] =
     [
         [AnimationProperty(name: .widthMultiplier, stepperMin: 0, stepperMax: 300, stepperIncrement: 0.1, startingStepperVal: 0.0), AnimationProperty(name: .heightMultiplier, stepperMin: 0, stepperMax: 200, stepperIncrement: 0.1, startingStepperVal: 0.0)],
@@ -52,6 +54,11 @@ class SettingsViewController: UIViewController {
         self.settingsView.settingsTableView.dataSource = self
         setupAddButton()
         navigationItem.title = "Settings"
+        
+        //check for saved settings
+        
+        FileManagerHelper.shared.loadSettingsList()
+        self.settings = FileManagerHelper.shared.getSettingsList().first
 
     }
     func setupAddButton(){
