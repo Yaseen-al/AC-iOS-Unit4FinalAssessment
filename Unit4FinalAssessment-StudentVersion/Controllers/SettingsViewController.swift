@@ -22,7 +22,7 @@ struct AnimationProperty {
 }
 
 class SettingsViewController: UIViewController {
-
+    let settingsView = SettingsView()
     //TO DO: Add more properties
     var properties: [[AnimationProperty]] =
     [
@@ -32,9 +32,23 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(tableView)
+        //This will add the settings view
+        view.addSubview(settingsView)
+        //This will assign the delgates for my settings tableView
+        self.settingsView.settingsTableView.delegate = self
+        self.settingsView.settingsTableView.dataSource = self
+        setupAddButton()
+//        view.addSubview(tableView)
         navigationItem.title = "Settings"
-        layoutTableView()
+//        layoutTableView()
+    }
+    func setupAddButton(){
+        let addButton = UIBarButtonItem(image: #imageLiteral(resourceName: "add-anchor-point"), style: .plain, target: self, action: #selector(addButtonAction))
+        navigationItem.rightBarButtonItem = addButton
+    }
+    
+    @objc func addButtonAction(){
+        
     }
     
     func layoutTableView() {
@@ -56,17 +70,18 @@ class SettingsViewController: UIViewController {
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return properties.count
+//        return properties.count
+        return 2
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //TO DO: Implement your Custom Cell that has a stepper
-        let property = properties[indexPath.section][indexPath.row]
-        let cell = UITableViewCell()
-        cell.textLabel?.text = property.name.rawValue
+//        let property = properties[indexPath.section][indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! CustomSettingsTableViewCell
         return cell
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return properties[section].count
+//        return properties[section].count
+        return 10
     }
 }
 
