@@ -7,46 +7,150 @@
 //
 
 import UIKit
+import SceneKit
+
 enum AnimationKeys: String {
-    case BorderColor = "Border Color"
     case BorderShadowColor = "Border Shadow Color"
-    case BorderWidth = "Border Width"
-    case CornerRadius = "Corner Radius"
-    case AnimateScale = "animate Scale"
-    case BorderShadowOpacity = "Shadow Opacity"
-    case AnimateRotationZ = "Animate Rotation Z"
-    case AnimateRotationY = "Animate Rotation Y"
-    case AnimateRotationx = "Animate Rotation x"
-    case AnimateTranslation = "Animate Translation"
-    case AnimateContent =  "Animate Content"
+    case ExitToCornerWithRevers = "Exit to Corner"
 }
 class AnimationViewController: UIViewController {
-    var animationProperty: AnimationKeys = AnimationKeys.BorderShadowColor
-    let animations = [AnimationKeys.AnimateContent, AnimationKeys.AnimateRotationx, AnimationKeys.AnimateScale]
+    var animator: UIViewPropertyAnimator!
+    private var originalPosition = CGRect()
+    var topPosition = CGRect()
+    var buttomPosition = CGRect()
+    private let originAngle:CGFloat = 0
+    var firstAngle: CGFloat = 0
+    var secondAngle: CGFloat = 0
+    //animations array
+    let animations = [AnimationKeys.ExitToCornerWithRevers, AnimationKeys.BorderShadowColor]
+    var currentAnimationProperty: AnimationKeys = AnimationKeys.BorderShadowColor
+    
     let animationView = AnimationView()
+    var animatingStatus = true
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(animationView)
         self.animationView.backGroundView.image = #imageLiteral(resourceName: "snow Image")
-            self.animationView.imageView.image = #imageLiteral(resourceName: "snowman-1")
+        self.animationView.imageView.image = #imageLiteral(resourceName: "snowman-1")
         self.view.backgroundColor = UIColor(red: 0.6, green: 0.6, blue: 0.9, alpha: 1.0)
         // setup picker delegates
         self.animationView.animationPickerView.dataSource = self
         self.animationView.animationPickerView.delegate = self
         setupAnimationButton()
     }
+    override func viewDidAppear(_ animated: Bool) {
+        self.originalPosition = self.animationView.imageView.frame
+    }
     func setupAnimationButton(){
         self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: UIControlState.normal)
         self.animationView.animationButton.layer.shadowOpacity = 0.15
         self.animationView.animationButton.addTarget(self, action: #selector(animationButtonAction), for: .touchUpInside)
-//        self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: UIControlState.selected)
+        //        self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: UIControlState.selected)
     }
     @objc func animationButtonAction(){
-        print("Yoooo stop presing on me")
-        self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: .highlighted)
-    
+        print(Settings.manager.heigh)
+        Settings.manager.heigh += 50
+        switch self.currentAnimationProperty {
+        case .ExitToCornerWithRevers:
+            print("Yoooo stop presing on me")
+            if animatingStatus{
+                exitToCornerWithRevers()
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: .normal)
+                self.resume(layer: self.animationView.imageView.layer)
+                animatingStatus = false
+            }else{
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+                //for pausing
+                self.pause(layer: self.animationView.imageView.layer)
+                animatingStatus = true
+            }
+        case .BorderShadowColor:
+            print("Yoooo stop presing on me")
+            if animatingStatus{
+                animateBorderShadowOpacity()
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: .normal)
+                self.resume(layer: self.animationView.imageView.layer)
+                animatingStatus = false
+            }else{
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+                //for pausing
+                self.pause(layer: self.animationView.imageView.layer)
+                animatingStatus = true
+            }
+        }
+        
+    }
+    func animateBorderShadowOpacity(){
+        UIView.animate(withDuration: 3, animations: {
+            let animatation = CABasicAnimation(keyPath: "shadowOpacity")
+            animatation.fromValue = 0.0
+            animatation.toValue = 1.0
+            animatation.duration = 5
+            self.animationView.imageView.layer.add(animatation, forKey: nil)
+            self.animationView.imageView.layer.shadowOpacity = 2.0
+            let offsetAnimation = CABasicAnimation(keyPath: "shadowOffset")
+            offsetAnimation.fromValue = CGSize.zero
+            offsetAnimation.toValue = CGSize(width: 5.0, height: 5.0)
+            offsetAnimation.duration = 5
+            self.animationView.imageView.layer.add(offsetAnimation, forKey: nil)
+            self.animationView.imageView.layer.shadowOffset = CGSize(width: 5.0, height: 5.0)
+        }, completion: {(success) in
+            
+            self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+            self.animatingStatus = true
+        })
+        
+    }
+    func exitToCornerWithRevers() {
+        UIView.animate(withDuration: 3, animations: {
+            self.animateRotationX()
+            self.animationView.imageView.frame = self.topPosition
+            self.secondAngle =  self.firstAngle + CGFloat.pi
+            self.animationView.imageView.transform = CGAffineTransform.init(rotationAngle: self.secondAngle)
+            self.firstAngle = self.secondAngle
+        }, completion: {(success) in
+            print("fiished animation")
+            self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+            self.enterFromTheCorner()
+            self.animatingStatus = true
+        })
+    }
+    func enterFromTheCorner() {
+        UIView.animate(withDuration: 3, animations: {
+            self.animationView.imageView.frame = self.originalPosition
+            self.secondAngle =  self.firstAngle + CGFloat.pi
+            self.animationView.imageView.transform = CGAffineTransform.init(rotationAngle: self.secondAngle)
+            self.firstAngle = self.secondAngle
+        }, completion: {(success) in
+            print("fiished animation")
+            self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+            self.animationView.imageView.frame = self.originalPosition
+            self.animatingStatus = true
+        })
+    }
+    func animateRotationX() {
+        let transformRotaion = CABasicAnimation(keyPath: "transform.rotation.x")
+        transformRotaion.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        transformRotaion.fromValue = 0
+        transformRotaion.byValue = CGFloat(2.0 * .pi)
+        transformRotaion.duration = 2.0
+        animationView.imageView.layer.add(transformRotaion, forKey: nil)
+        animationView.imageView.layer.transform = CATransform3DMakeRotation(CGFloat(2.0 * .pi), 0, 0, 1)
+    }
+    func pause(layer: CALayer) {
+        let pausedTime = layer.convertTime(CACurrentMediaTime(), from: nil)
+        layer.speed = 0
+        layer.timeOffset = pausedTime
     }
     
+    func resume(layer: CALayer) {
+        let pausedTime = layer.timeOffset
+        layer.speed = 1
+        layer.timeOffset = 0
+        layer.beginTime = 0
+        let timeSincePause = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        layer.beginTime = timeSincePause
+    }
 }
 
 extension AnimationViewController: UIPickerViewDataSource{
@@ -64,6 +168,9 @@ extension AnimationViewController: UIPickerViewDataSource{
 extension AnimationViewController: UIPickerViewDelegate{
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         // TODO selecting a cell in a picker will change a animation property
+        let animationSetup = animations[row]
+        self.currentAnimationProperty = animationSetup
+        
     }
 }
 

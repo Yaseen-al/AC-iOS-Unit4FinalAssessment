@@ -31,7 +31,7 @@ class AnimationView: UIView {
     }()
     lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.text = "This is going to be The header label"
+        label.text = ""
         return label
     }()
     lazy var imageView: UIImageView = {
