@@ -10,6 +10,7 @@ import UIKit
 import SceneKit
 
 enum AnimationKeys: String {
+    case AnimateRotationZ = "Animate Rotation Z"
     case BorderShadowColor = "Border Shadow Color"
     case ExitToCornerWithRevers = "Exit to Corner"
 }
@@ -22,7 +23,7 @@ class AnimationViewController: UIViewController {
     var firstAngle: CGFloat = 0
     var secondAngle: CGFloat = 0
     //animations array
-    let animations = [AnimationKeys.ExitToCornerWithRevers, AnimationKeys.BorderShadowColor]
+    let animations = [AnimationKeys.ExitToCornerWithRevers, AnimationKeys.BorderShadowColor, AnimationKeys.AnimateRotationZ]
     var currentAnimationProperty: AnimationKeys = AnimationKeys.BorderShadowColor
     
     let animationView = AnimationView()
@@ -48,8 +49,6 @@ class AnimationViewController: UIViewController {
         //        self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: UIControlState.selected)
     }
     @objc func animationButtonAction(){
-        print(Settings.manager.heigh)
-        Settings.manager.heigh += 50
         switch self.currentAnimationProperty {
         case .ExitToCornerWithRevers:
             print("Yoooo stop presing on me")
@@ -77,9 +76,41 @@ class AnimationViewController: UIViewController {
                 self.pause(layer: self.animationView.imageView.layer)
                 animatingStatus = true
             }
+        case .AnimateRotationZ:
+            if animatingStatus{
+                animateRotationZ()
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: .normal)
+                self.resume(layer: self.animationView.imageView.layer)
+                animatingStatus = false
+            }else{
+                self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+                //for pausing
+                self.pause(layer: self.animationView.imageView.layer)
+                animatingStatus = true
+            }
         }
+
+    }
+    func animateRotationZ() {
+        UIView.animate(withDuration: 3, animations: {
+            self.animateZ()
+        }, completion: {(success) in
+            print("finished animation")
+            self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+            self.animatingStatus = true
+        })
         
     }
+    func animateZ() {
+        let transformRotaion = CABasicAnimation(keyPath: "transform.rotation.z")
+        transformRotaion.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        transformRotaion.fromValue = 0
+        transformRotaion.byValue = CGFloat(2.0 * .pi)
+        transformRotaion.duration = 2.0
+        self.animationView.imageView.layer.add(transformRotaion, forKey: nil)
+        self.animationView.imageView.layer.transform = CATransform3DMakeRotation(CGFloat(2.0 * .pi), 0, 0, 1)
+    }
+    
     func animateBorderShadowOpacity(){
         UIView.animate(withDuration: 3, animations: {
             let animatation = CABasicAnimation(keyPath: "shadowOpacity")
@@ -97,6 +128,7 @@ class AnimationViewController: UIViewController {
         }, completion: {(success) in
             
             self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: .normal)
+            self.animationView.imageView.layer.shadowOpacity = 0.0
             self.animatingStatus = true
         })
         

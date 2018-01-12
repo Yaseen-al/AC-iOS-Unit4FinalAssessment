@@ -15,7 +15,7 @@
 		810982D720090E5F004142A5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982D620090E5F004142A5 /* SettingsView.swift */; };
 		810982D92009119E004142A5 /* CustomSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982D82009119E004142A5 /* CustomSettingsTableViewCell.swift */; };
 		810982DB20091AAC004142A5 /* AnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982DA20091AAC004142A5 /* AnimationView.swift */; };
-		810982DE20092DDE004142A5 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982DD20092DDE004142A5 /* Settings.swift */; };
+		810982DE20092DDE004142A5 /* Setting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982DD20092DDE004142A5 /* Setting.swift */; };
 		810982E2200965F6004142A5 /* FileMangerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810982E1200965F6004142A5 /* FileMangerHelper.swift */; };
 /* End PBXBuildFile section */
 
@@ -30,7 +30,7 @@
 		810982D620090E5F004142A5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		810982D82009119E004142A5 /* CustomSettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSettingsTableViewCell.swift; sourceTree = "<group>"; };
 		810982DA20091AAC004142A5 /* AnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationView.swift; sourceTree = "<group>"; };
-		810982DD20092DDE004142A5 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		810982DD20092DDE004142A5 /* Setting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Setting.swift; sourceTree = "<group>"; };
 		810982E1200965F6004142A5 /* FileMangerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMangerHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,7 +105,7 @@
 		810982DC20092DCF004142A5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				810982DD20092DDE004142A5 /* Settings.swift */,
+				810982DD20092DDE004142A5 /* Setting.swift */,
 				810982E1200965F6004142A5 /* FileMangerHelper.swift */,
 			);
 			path = Model;
@@ -187,7 +187,7 @@
 				810982D720090E5F004142A5 /* SettingsView.swift in Sources */,
 				810982E2200965F6004142A5 /* FileMangerHelper.swift in Sources */,
 				810982DB20091AAC004142A5 /* AnimationView.swift in Sources */,
-				810982DE20092DDE004142A5 /* Settings.swift in Sources */,
+				810982DE20092DDE004142A5 /* Setting.swift in Sources */,
 				54AE10362007F256005FFA29 /* AnimationViewController.swift in Sources */,
 				54AE10382007F270005FFA29 /* SettingsViewController.swift in Sources */,
 			);

@@ -7,14 +7,14 @@
 //
 
 import Foundation
-class playerDataModel {
+class FileManagerHelper {
     //step one is to make your file name
     static let kPathName = "favouriteBooks.plist"
     //intiate your class as a single tone
     private init(){}
-    static let shared = playerDataModel()
+    static let shared = FileManagerHelper()
     //create your data storage and saving when you update it
-    private var settingsList = [Settings]() {
+    private var settingsList = [Setting]() {
         didSet {
             saveSettingsList()
             print(documentDirectory()) //to print the directory of your file
@@ -28,7 +28,7 @@ class playerDataModel {
     }
     //returns supplied path name in documents directory
     private func dataFilePath(pathName: String)->URL {
-        return playerDataModel.shared.documentDirectory().appendingPathComponent(pathName)
+        return FileManagerHelper.shared.documentDirectory().appendingPathComponent(pathName)
     }
     //Load you need to load your data in the view didlOad in order to acces the stuff saved on the app if you didn't do that you will have it empty
     //what is happening in loading is just decoding what the list have
@@ -36,12 +36,12 @@ class playerDataModel {
         //make your decoder
         let decoder = PropertyListDecoder()
         // make the path
-        let path = dataFilePath(pathName: playerDataModel.kPathName)
+        let path = dataFilePath(pathName: FileManagerHelper.kPathName)
         do {
             //try to get the raw data using the path
             let data = try Data.init(contentsOf: path)
             // convert the raw data to a specific type
-            settingsList = try decoder.decode([Settings].self, from: data)
+            settingsList = try decoder.decode([Setting].self, from: data)
         } catch {print("decoder error: \(error.localizedDescription)")}
     }
     //Save (encode)
@@ -49,16 +49,16 @@ class playerDataModel {
         let encoder = PropertyListEncoder()
         do {
             let data = try encoder.encode(settingsList)
-            try data.write(to: dataFilePath(pathName: playerDataModel.kPathName), options: .atomic)
+            try data.write(to: dataFilePath(pathName: FileManagerHelper.kPathName), options: .atomic)
         }
         catch {print("encoder error: \(error.localizedDescription)")}
     }
     //Read (get) after it has been loaded at the begining of the programe
-    func getSettingsList() -> [Settings]{
+    func getSettingsList() -> [Setting]{
         return settingsList
     }
     //Add
-    func addSettingToList(setting: Settings) {
+    func addSettingToList(setting: Setting) {
         settingsList.append(setting)
         
     }

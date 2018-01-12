@@ -7,12 +7,10 @@
 //
 
 import Foundation
-class Settings{
-    private init() {}
-    static let manager = Settings()
-     var width = 200
-     var heigh = 200
-     var numberOfFlips = 0
-    
+struct Setting{
+    var width = 200
+    var heigh = 200
+    var horizontalOffset = 0
+    var verticalOffset = 0
 }
 

@@ -18,7 +18,6 @@ class CustomSettingsTableViewCell: UITableViewCell {
     lazy var cellLable: UILabel = {
         let label = UILabel()
         label.text = "This is going to be your settings Values: 124"
-        label.backgroundColor = .green
         return label
     }()
     lazy var cellStepper: UIStepper = {

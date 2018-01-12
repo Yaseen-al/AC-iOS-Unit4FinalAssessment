@@ -6,6 +6,9 @@
 //  Copyright © 2018 C4Q . All rights reserved.
 //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
 
+//Read Me ====================
+// I am still working on the selector function to make it take properties in order to keep track of section and row I have tried to keep track of section in the button but the button takes only an integer.. I will appreciate any other ideas if I couldn't find an answer.
+
 import UIKit
 
 enum PropertyName: String {
@@ -28,6 +31,11 @@ class SettingsViewController: UIViewController {
     let settingsView = SettingsView()
     //TO DO: Add more properties
     let tagKeeper = [Int]()
+    let width = 20
+    let height = 100
+    let horizontalOffset = 20
+    let verticalOffset = 10
+    
     var properties: [[AnimationProperty]] =
     [
         [AnimationProperty(name: .widthMultiplier, stepperMin: 0, stepperMax: 300, stepperIncrement: 0.1, startingStepperVal: 0.0), AnimationProperty(name: .heightMultiplier, stepperMin: 0, stepperMax: 200, stepperIncrement: 0.1, startingStepperVal: 0.0)],
@@ -43,9 +51,8 @@ class SettingsViewController: UIViewController {
         self.settingsView.settingsTableView.delegate = self
         self.settingsView.settingsTableView.dataSource = self
         setupAddButton()
-//        view.addSubview(tableView)
         navigationItem.title = "Settings"
-//        layoutTableView()
+
     }
     func setupAddButton(){
         let addButton = UIBarButtonItem(image: #imageLiteral(resourceName: "add-anchor-point"), style: .plain, target: self, action: #selector(addButtonAction))
@@ -58,7 +65,8 @@ class SettingsViewController: UIViewController {
             textField.placeholder = "Add Settings Name"
         })
         let saveAction = UIAlertAction(title: "Ok", style: .default){(handler) in
-//            FileManagerHelper.manager.addNew(newPhoto: photo)
+            let savedSetting = Setting(width: self.width, heigh: self.height, horizontalOffset: self.horizontalOffset, verticalOffset: self.verticalOffset)
+            FileManagerHelper.shared.addSettingToList(setting: savedSetting)
 
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
