@@ -8,6 +8,7 @@
 
 import Foundation
 struct Setting:Codable{
+    var title: String
     var width: Int
     var heigh: Int
     var horizontalOffset: Int

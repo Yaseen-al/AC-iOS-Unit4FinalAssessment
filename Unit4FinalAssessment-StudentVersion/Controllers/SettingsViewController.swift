@@ -74,7 +74,7 @@ class SettingsViewController: UIViewController {
             textField.placeholder = "Add Settings Name"
         })
         let saveAction = UIAlertAction(title: "Ok", style: .default){(handler) in
-            let savedSetting = Setting(width: Int(self.properties[0][0].startingStepperVal), heigh: Int(self.properties[0][1].startingStepperVal), horizontalOffset: Int(self.properties[1][0].startingStepperVal), verticalOffset: Int(self.properties[1][1].startingStepperVal))
+            let savedSetting = Setting(title: (alert.textFields?.first?.text)!,width: Int(self.properties[0][0].startingStepperVal), heigh: Int(self.properties[0][1].startingStepperVal), horizontalOffset: Int(self.properties[1][0].startingStepperVal), verticalOffset: Int(self.properties[1][1].startingStepperVal))
             print(savedSetting)
             FileManagerHelper.shared.addSettingToList(setting: savedSetting)
         }
