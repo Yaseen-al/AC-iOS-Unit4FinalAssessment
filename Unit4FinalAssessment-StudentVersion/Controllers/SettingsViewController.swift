@@ -74,9 +74,9 @@ class SettingsViewController: UIViewController {
             textField.placeholder = "Add Settings Name"
         })
         let saveAction = UIAlertAction(title: "Ok", style: .default){(handler) in
-            let savedSetting = Setting(width: self.width, heigh: self.height, horizontalOffset: self.horizontalOffset, verticalOffset: self.verticalOffset)
+            let savedSetting = Setting(width: Int(self.properties[0][0].startingStepperVal), heigh: Int(self.properties[0][1].startingStepperVal), horizontalOffset: Int(self.properties[1][0].startingStepperVal), verticalOffset: Int(self.properties[1][1].startingStepperVal))
+            print(savedSetting)
             FileManagerHelper.shared.addSettingToList(setting: savedSetting)
-
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         alert.addAction(saveAction)
@@ -105,12 +105,10 @@ extension SettingsViewController: UITableViewDataSource {
     
     @objc func stepperValueChanged(sender:UIStepper!)
     {
-        print(sender.tag)
         for i in 0..<properties.count{
             for j in 0..<properties[i].count{
                 if properties[i][j].id == sender.tag{
                     properties[i][j].startingStepperVal = sender.value
-                    print(properties[i][j].name, properties[i][j].startingStepperVal)
                 }
             }
         }

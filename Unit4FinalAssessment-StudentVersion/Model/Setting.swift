@@ -7,10 +7,10 @@
 //
 
 import Foundation
-struct Setting{
-    var width = 200
-    var heigh = 200
-    var horizontalOffset = 0
-    var verticalOffset = 0
+struct Setting:Codable{
+    var width: Int
+    var heigh: Int
+    var horizontalOffset: Int
+    var verticalOffset: Int
 }
 
