@@ -6,9 +6,6 @@
 //  Copyright © 2018 C4Q . All rights reserved.
 //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
 
-//Read Me ====================
-// I am still working on the selector function to make it take properties in order to keep track of section and row I have tried to keep track of section in the button but the button takes only an integer.. I will appreciate any other ideas if I couldn't find an answer.
-
 import UIKit
 
 enum PropertyName: String {
@@ -20,17 +17,18 @@ enum PropertyName: String {
 }
 
 struct AnimationProperty {
+    let id: Int
     let name: PropertyName
     let stepperMin: Double
     let stepperMax: Double
     let stepperIncrement: Double
-    let startingStepperVal: Double
+    var startingStepperVal: Double
 }
 
 class SettingsViewController: UIViewController {
     let settingsView = SettingsView()
     //TO DO: Add more properties
-    let tagKeeper = [Int]()
+    
     let width = 20
     let height = 100
     let horizontalOffset = 20
@@ -40,10 +38,14 @@ class SettingsViewController: UIViewController {
     
     var properties: [[AnimationProperty]] =
     [
-        [AnimationProperty(name: .widthMultiplier, stepperMin: 0, stepperMax: 300, stepperIncrement: 0.1, startingStepperVal: 0.0), AnimationProperty(name: .heightMultiplier, stepperMin: 0, stepperMax: 200, stepperIncrement: 0.1, startingStepperVal: 0.0)],
-        [AnimationProperty(name: .horizontalOffset, stepperMin: 0, stepperMax: 20, stepperIncrement: 0.1, startingStepperVal: 0.0),
-         AnimationProperty(name: .verticalOffset, stepperMin: 0, stepperMax: 20, stepperIncrement: 0.1, startingStepperVal: 0.0)]
-    ]
+        [AnimationProperty(id: 0, name: .widthMultiplier, stepperMin: 0, stepperMax: 300, stepperIncrement: 0.1, startingStepperVal: 0.0), AnimationProperty(id: 1, name: .heightMultiplier, stepperMin: 0, stepperMax: 200, stepperIncrement: 0.1, startingStepperVal: 0.0)],
+        [AnimationProperty(id: 2, name: .horizontalOffset, stepperMin: 0, stepperMax: 20, stepperIncrement: 0.1, startingStepperVal: 0.0),
+         AnimationProperty(id: 3, name: .verticalOffset, stepperMin: 0, stepperMax: 20, stepperIncrement: 0.1, startingStepperVal: 0.0)]
+        ]{
+        didSet{
+            self.settingsView.settingsTableView.reloadData()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,19 +94,25 @@ extension SettingsViewController: UITableViewDataSource {
         let propertySetup = properties[indexPath.section][indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! CustomSettingsTableViewCell
         // assign index path of the stepper to capture it on the function
-        cell.cellStepper.tag = indexPath.row
+        cell.cellStepper.tag = propertySetup.id
         cell.cellStepper.maximumValue = propertySetup.stepperMax
         cell.cellStepper.minimumValue = propertySetup.stepperMin
         cell.cellStepper.autorepeat = true
-        cell.cellLable.text = propertySetup.name.rawValue
-//        cell.cellStepper.addTarget(self, action: #selector(stepperValueChanged(sender:section:)), for: .valueChanged)
-        cell.cellStepper.addTarget(self, action: #selector(stepperValueChanged(sender:section:)), for: .valueChanged)
+        cell.cellLable.text = "\(propertySetup.name.rawValue): \(propertySetup.startingStepperVal)"
+        cell.cellStepper.addTarget(self, action: #selector(stepperValueChanged(sender:)), for: .valueChanged)
         return cell
     }
-    @objc func stepperValueChanged(sender:UIStepper!, section: Int)
+    
+    @objc func stepperValueChanged(sender:UIStepper!)
     {
-        if sender.tag < 2{
-            print("It Works, Value is --&gt;\(Int(sender.value).description)")
+        print(sender.tag)
+        for i in 0..<properties.count{
+            for j in 0..<properties[i].count{
+                if properties[i][j].id == sender.tag{
+                    properties[i][j].startingStepperVal = sender.value
+                    print(properties[i][j].name, properties[i][j].startingStepperVal)
+                }
+            }
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
