@@ -18,6 +18,7 @@ class CustomSettingsTableViewCell: UITableViewCell {
     lazy var cellLable: UILabel = {
         let label = UILabel()
         label.text = "This is going to be your settings Values: 124"
+        label.numberOfLines = 2
         return label
     }()
     lazy var cellStepper: UIStepper = {

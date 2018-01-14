@@ -7,6 +7,16 @@
 //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
 
 import UIKit
+protocol keepTrackTest: class {
+    var myName: String{get set}
+}
+
+class Delegate: keepTrackTest {
+    var myName: String
+    init(myName: String) {
+        self.myName = myName
+    }
+}
 
 enum PropertyName: String {
     case widthMultiplier = "Width Multiplier"
@@ -28,7 +38,7 @@ struct AnimationProperty {
 class SettingsViewController: UIViewController {
     let settingsView = SettingsView()
     //TO DO: Add more properties
-    
+    var delegate: Delegate?
     let width = 20
     let height = 100
     let horizontalOffset = 20
@@ -76,6 +86,7 @@ class SettingsViewController: UIViewController {
         let saveAction = UIAlertAction(title: "Ok", style: .default){(handler) in
             let savedSetting = Setting(title: (alert.textFields?.first?.text)!,width: Int(self.properties[0][0].startingStepperVal), heigh: Int(self.properties[0][1].startingStepperVal), horizontalOffset: Int(self.properties[1][0].startingStepperVal), verticalOffset: Int(self.properties[1][1].startingStepperVal))
             print(savedSetting)
+            self.delegate = Delegate(myName: "(alert.textFields?.first?.text)!")
             FileManagerHelper.shared.addSettingToList(setting: savedSetting)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)

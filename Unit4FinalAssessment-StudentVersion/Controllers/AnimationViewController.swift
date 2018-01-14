@@ -14,7 +14,12 @@ enum AnimationKeys: String {
     case BorderShadowColor = "Border Shadow Color"
     case ExitToCornerWithRevers = "Exit to Corner"
 }
-class AnimationViewController: UIViewController {
+class AnimationViewController: UIViewController, keepTrackTest{
+    var myName = ""{
+        didSet{
+            print(myName)
+        }
+    }
     var animator: UIViewPropertyAnimator!
     private var originalPosition = CGRect()
     var topPosition = CGRect()
@@ -22,17 +27,20 @@ class AnimationViewController: UIViewController {
     private let originAngle:CGFloat = 0
     var firstAngle: CGFloat = 0
     var secondAngle: CGFloat = 0
+    
     //animations array
     let animations = [AnimationKeys.ExitToCornerWithRevers, AnimationKeys.BorderShadowColor, AnimationKeys.AnimateRotationZ]
     var currentAnimationProperty: AnimationKeys = AnimationKeys.BorderShadowColor
     
     let animationView = AnimationView()
     var animatingStatus = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(animationView)
         self.animationView.backGroundView.image = #imageLiteral(resourceName: "snow Image")
         self.animationView.imageView.image = #imageLiteral(resourceName: "snowman-1")
+        
         self.view.backgroundColor = UIColor(red: 0.6, green: 0.6, blue: 0.9, alpha: 1.0)
         // setup picker delegates
         self.animationView.animationPickerView.dataSource = self
@@ -46,12 +54,11 @@ class AnimationViewController: UIViewController {
         self.animationView.animationButton.setImage(#imageLiteral(resourceName: "PlayButton size 64"), for: UIControlState.normal)
         self.animationView.animationButton.layer.shadowOpacity = 0.15
         self.animationView.animationButton.addTarget(self, action: #selector(animationButtonAction), for: .touchUpInside)
-        //        self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: UIControlState.selected)
     }
     @objc func animationButtonAction(){
         switch self.currentAnimationProperty {
         case .ExitToCornerWithRevers:
-            print("Yoooo stop presing on me")
+//            print("Yoooo stop presing on me")
             if animatingStatus{
                 exitToCornerWithRevers()
                 self.animationView.animationButton.setImage(#imageLiteral(resourceName: "stop-button"), for: .normal)
@@ -102,6 +109,7 @@ class AnimationViewController: UIViewController {
         
     }
     func animateZ() {
+        
         let transformRotaion = CABasicAnimation(keyPath: "transform.rotation.z")
         transformRotaion.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
         transformRotaion.fromValue = 0
